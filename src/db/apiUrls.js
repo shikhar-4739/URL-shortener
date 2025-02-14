@@ -67,7 +67,7 @@ export async function getLongUrl(id) {
         console.error(error.message);
         throw new Error("Error fetching short link");
     }
-
+    
     return data;
 }
 

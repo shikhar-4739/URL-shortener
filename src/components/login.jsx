@@ -16,6 +16,7 @@ import {BeatLoader} from "react-spinners";
 import useFetch from "@/hooks/use-fetch";
 import {UrlState} from "@/context";
 import { login } from "@/db/apiAuth";
+import { toast } from "react-toastify";
 
 const Login = () => {
   let [searchParams] = useSearchParams();
@@ -44,8 +45,8 @@ const Login = () => {
     if (error === null && data) {
       fetchUser();
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+      toast.success("Login Successfully");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, data]);
 
   const handleLogin = async () => {

@@ -10,9 +10,11 @@ import { Copy, Download, LinkIcon, Trash } from "lucide-react";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BarLoader, BeatLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 const Link = () => {
   const downloadImage = () => {
+    toast.info("QR Code Downloading");
     const imageUrl = url?.qr;
     const fileName = url?.title;
 
@@ -23,6 +25,7 @@ const Link = () => {
 
     anchor.click();
     document.body.removeChild(anchor);
+    
   };
   const { id } = useParams();
   const { user } = UrlState();
@@ -55,41 +58,54 @@ const Link = () => {
     link = url?.custom_url ? url?.custom_url : url?.short_url;
   }
 
+  const handleDelete = async() => {
+    try {
+      await fnDelete();
+      toast.success("URL Deleted Successfully");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Error Deleting URL");
+    }
+  }
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(`https://trimrr.in/${link}`);
+    toast.success("Link Copied");
+  }
+
   return (
     <>
       {(loading || loadingStats) && (
         <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
       )}
-      <div className="flex flex-col gap-8 sm:flex-row justify-between">
+      <div className="flex flex-col gap-8 sm:flex-row justify-between p-4">
         <div className="flex flex-col items-start gap-8 rounded-lg sm:w-2/5">
-          <span className="text-6xl font-extrabold hover:underline cursor-pointer">
+          <span className="text-6xl font-extrabold hover:underline cursor-pointer ml-10 md:ml-0">
             {url?.title}
           </span>
           <a
             href={`https://trimrr.in/${link}`}
             target="_blank"
-            className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
+            className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer ml-8 md:ml-0"
           >
             https://trimrr.in/{link}
           </a>
           <a
             href={url?.original_url}
             target="_blank"
-            className="flex items-center gap-1 hover:underline cursor-pointer"
+            className="flex items-center gap-1 hover:underline cursor-pointer ml-4 md:ml-0"
           >
             <LinkIcon className="p-1" />
             {url?.original_url}
           </a>
-          <span className="flex items-end font-extralight text-sm">
+          <span className="flex items-end font-extralight text-sm ml-8 md:ml-0">
             {new Date(url?.created_at).toLocaleString()}
           </span>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 ml-4 md:ml-0">
             <Button
               variant="ghost"
-              onClick={() =>
-                navigator.clipboard.writeText(`https://trimrr.in/${link}`)
-              }
+              onClick={handleCopyLink}
             >
               <Copy />
             </Button>
@@ -98,11 +114,7 @@ const Link = () => {
             </Button>
             <Button
               variant="ghost"
-              onClick={() =>
-                fnDelete().then(() => {
-                  navigate("/dashboard");
-                })
-              }
+              onClick={handleDelete}
               disable={loadingDelete}
             >
               {loadingDelete ? (
@@ -125,7 +137,7 @@ const Link = () => {
           </CardHeader>
           {stats && stats?.length ? (
             <CardContent>
-              <Card>
+              <Card className="p-1">
                 <CardHeader>
                   <CardTitle>Total Clicks</CardTitle>
                 </CardHeader>
@@ -134,9 +146,9 @@ const Link = () => {
                 </CardContent>
               </Card>
 
-              <CardTitle>Location Info</CardTitle>
+              <CardTitle className="pt-6 pb-2">Location Info</CardTitle>
               <Location stats={stats} />
-              <CardTitle>Device Info</CardTitle>
+              <CardTitle className="pt-6 pb-2">Device Info</CardTitle>
               <Device stats={stats} />
               
             </CardContent>

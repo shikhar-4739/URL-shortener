@@ -15,6 +15,7 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import {signup} from "@/db/apiAuth";
 import {BeatLoader} from "react-spinners";
 import useFetch from "@/hooks/use-fetch";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   let [searchParams] = useSearchParams();
@@ -43,6 +44,7 @@ const Signup = () => {
   useEffect(() => {
     if (error === null && data) {
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+      toast.success("Account created successfully");
     }
     
   }, [error, loading]);

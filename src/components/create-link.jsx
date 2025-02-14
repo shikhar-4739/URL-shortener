@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -19,6 +18,8 @@ import { QRCode } from "react-qrcode-logo";
 import { BeatLoader } from "react-spinners";
 import useFetch from "@/hooks/use-fetch";
 import { createUrl } from "@/db/apiUrls";
+import PaperShower from "./PaperShower";
+import { toast } from "react-toastify";
 
 const CreateLink = () => {
   const { user } = UrlState();
@@ -34,6 +35,7 @@ const CreateLink = () => {
     longUrl: longLink ? longLink : "",
     customUrl: "",
   });
+  const [showPaper, setShowPaper] = useState(false);
 
   const schema = yup.object().shape({
     title: yup.string().required("Title is required"),
@@ -60,9 +62,11 @@ const CreateLink = () => {
 
   useEffect(() => {
     if (error === null && data) {
-      navigate(`/link/${data[0].id}`);
+        navigate(`/link/${data[0].id}`)
+        setShowPaper(true);
     }
   }, [error, data]);
+
 
   const createNewLink = async () => {
     setErrors([]);
@@ -72,6 +76,7 @@ const CreateLink = () => {
       const blob = await new Promise((resolve) => canvas.toBlob(resolve));
 
       await fnCreateUrl(blob);
+      toast.success("Link Created Successfully");
     } catch (e) {
       const newErrors = {};
       e?.inner?.forEach((err) => {
@@ -117,7 +122,7 @@ const CreateLink = () => {
         {errors.longUrl && <Error message={errors.longUrl} />}
 
         <div className="flex items-center gap-2">
-          <Card>trimrr.in</Card>/
+          <Card className="p-2">trimrr.in</Card>/
           <Input
             id="customUrl"
             placeholder="Custom Link (optional)"
@@ -137,6 +142,7 @@ const CreateLink = () => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {showPaper && <PaperShower />}
     </Dialog>
   );
 };

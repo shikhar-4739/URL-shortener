@@ -14,6 +14,7 @@ import { logout } from "@/db/apiAuth";
 import { BarLoader } from "react-spinners";
 import { UrlState } from "@/context";
 import useFetch from "@/hooks/use-fetch";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ const Header = () => {
   const { user, fetchUser } = UrlState();
 
   const { loading, fn: fnLogout } = useFetch(logout);
+
+  const getAvatarFallback = (email) => {
+    if (!email) return "CN";
+    const [first, second] = email.split("_")[0];
+    return `${first}${second}`.toUpperCase();
+  };
 
   return (
     <>
@@ -40,7 +47,7 @@ const Header = () => {
                     src={user?.user_metadata?.profile_pic}
                     className="object-contain"
                   />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>{getAvatarFallback(user?.user_metadata?.name)}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -60,6 +67,7 @@ const Header = () => {
                     onClick={() => {
                       fnLogout().then(() => {
                         fetchUser();
+                        toast.success("Logged out successfully");
                         navigate("/");
                       });
                     }}

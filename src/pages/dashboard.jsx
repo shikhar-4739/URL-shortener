@@ -32,7 +32,7 @@ const Dashboard = () => {
   const filteredUrls = urls?.filter((url) => url.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 p-4 ">
       {(loading || loadingClicks) && <BarLoader width={"100%"} color="#36d7b7" />}
       <div className="grid grid-cols-2 gap-4">
         <Card>

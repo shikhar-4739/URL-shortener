@@ -5,10 +5,12 @@ import { Copy, Download, Trash } from 'lucide-react'
 import useFetch from '@/hooks/use-fetch'
 import { deleteUrl } from '@/db/apiUrls'
 import { BeatLoader } from 'react-spinners'
+import { toast } from 'react-toastify'
 
 const LinkCard = ({url, fetchUrls}) => {
 
     const downloadImage = () => {
+        toast.info('QR Code Downloading');
         const imageUrl = url?.qr;
         const fileName = url?.title;
 
@@ -19,6 +21,21 @@ const LinkCard = ({url, fetchUrls}) => {
         document.body.appendChild(anchor);
         anchor.click();
         document.body.removeChild(anchor);
+    }
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(`https://trimrr.in/${url?.short_url}`);
+        toast.success('Link Copied!');
+    }
+
+    const handleDelete = async() => {
+        try {
+            await fnDelete();
+            toast.success('URL Deleted Successfully');
+            fetchUrls();
+        } catch (error) {
+            toast.error('Error Deleting URL');
+        }
     }
 
     const {loading: loadingDelete, fn: fnDelete} = useFetch(deleteUrl, url?.id);
@@ -45,16 +62,14 @@ const LinkCard = ({url, fetchUrls}) => {
       <div>
         <Button 
             variant="ghost"
-            onClick={() => 
-                navigator.clipboard.writeText(`https://trimrr.in/${url?.short_url}`)
-            }
+            onClick={handleCopyLink}
         >
             <Copy />
         </Button>
         <Button variant="ghost" onClick={downloadImage}>
             <Download />
         </Button>
-        <Button variant="ghost" onClick={() => fnDelete().then(() => fetchUrls())}>
+        <Button variant="ghost" onClick={handleDelete} disabled={loadingDelete}>
             {loadingDelete ? <BeatLoader size={5} color='white' /> : <Trash />}
         </Button>
       </div>

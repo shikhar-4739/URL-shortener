@@ -20,19 +20,19 @@ export const storeClicks = async ({id, originalUrl}) => {
         const res = parser.getResult();
         const device = res.type || "desktop";
 
-        const response = await fetch("https://ipai.co/json");
+        const response = await fetch("https://ipapi.co/json/");
         const {city, country_name: country} = await response.json();
-
+        
         await supabase.from("clicks").insert(
             {
                 url_id: id,
                 device: device,
                 city: city,
                 country: country,
-            });
-
-            console.log("Redirecting to", originalUrl);
-            window.location.href = originalUrl;
+            }
+        );
+        
+        window.location.href = originalUrl;
 
     } catch (error) {
         console.error("Error recording Click", error);

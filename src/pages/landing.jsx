@@ -8,26 +8,30 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useNavigate } from "react-router-dom";
+import { motion, useScroll, useTransform } from "motion/react";
 
 const Landing = () => {
-
-  const [longUrl, setLongUrl] = useState('');
+  const [longUrl, setLongUrl] = useState("");
   const navigate = useNavigate();
+  const { scrollYProgress } = useScroll();
+  const rotateY = useTransform(scrollYProgress, [0, 1], [0, 180]);
 
   const handleShorten = (e) => {
     e.preventDefault();
-    if(longUrl) {
+    if (longUrl) {
       navigate(`/auth?createNew=${longUrl}`);
     }
-
-  }
+  };
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center p-4">
       <h2 className="my-10 sm:my-16 text-3xl sm:text-6xl lg:text-7xl text-white text-center font-extrabold">
         The only URL Shortener <br /> you&rsquo;ll ever need! 👇
       </h2>
 
-      <form onSubmit={handleShorten} className="sm:h-14 flex flex-col sm:flex-row w-full md:w-2/4 gap-2">
+      <form
+        onSubmit={handleShorten}
+        className="sm:h-14 flex flex-col sm:flex-row w-full md:w-2/4 gap-2"
+      >
         <Input
           type="url"
           value={longUrl}
@@ -39,12 +43,18 @@ const Landing = () => {
           Shorten !
         </Button>
       </form>
-      <img src="/banner.jpeg" alt="banner" className="w-full my-11 md:px-11" />
+      <motion.img
+      src="/banner1.png"
+      alt="banner"
+      className="w-full my-11 md:px-11 rounded-xl"
+      animate={{ y: [0, -12, 0] }} // Moves up & down
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+    />
 
       <Accordion type="multiple" collapsible className="w-full md:px-11">
         <AccordionItem value="item-1">
           <AccordionTrigger>
-            How does the Trimrr URL shortener works?
+            How does the SnipURL shortener works?
           </AccordionTrigger>
           <AccordionContent>
             When you enter a long URL, our system generates a shorter version of

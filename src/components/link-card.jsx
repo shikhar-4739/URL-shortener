@@ -23,8 +23,10 @@ const LinkCard = ({url, fetchUrls}) => {
         document.body.removeChild(anchor);
     }
 
+    console.log(url);
+
     const handleCopyLink = () => {
-        navigator.clipboard.writeText(`https://trimrr.in/${url?.short_url}`);
+        navigator.clipboard.writeText(`https://url-shortener-sepia-pi.vercel.app/${url?.short_url}`);
         toast.success('Link Copied!');
     }
 
@@ -49,7 +51,7 @@ const LinkCard = ({url, fetchUrls}) => {
             {url?.title}
         </span>
         <span className='text-2xl text-blue-400 hover:underline cursor-pointer font-bold'>
-            https://trimrr.in/{url?.custom_url ? url?.custom_url : url.short_url}
+            https://snipurl.in/{url?.custom_url ? url?.custom_url : url.short_url}
         </span>
         <span className='flex items-center gap-1 hover:underline cursor-pointer'>
             {url?.original_url}

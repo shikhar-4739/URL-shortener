@@ -69,7 +69,7 @@ const Link = () => {
   }
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(`https://trimrr.in/${link}`);
+    navigator.clipboard.writeText(`https://url-shortener-sepia-pi.vercel.app/${link}`);
     toast.success("Link Copied");
   }
 
@@ -84,11 +84,11 @@ const Link = () => {
             {url?.title}
           </span>
           <a
-            href={`https://trimrr.in/${link}`}
+            href={`https://url-shortener-sepia-pi.vercel.app/${link}`}
             target="_blank"
             className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer ml-8 md:ml-0"
           >
-            https://trimrr.in/{link}
+            https://SnipURL.in/{link}
           </a>
           <a
             href={url?.original_url}
